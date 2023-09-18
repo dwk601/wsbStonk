@@ -1,3 +1,4 @@
+from secrets import LOCAL_MYSQL_HOST, LOCAL_MYSQL_PASSWORD
 
 import requests
 from datetime import datetime, timedelta
@@ -11,7 +12,7 @@ def get_last_fetched_date():
             last_fetched_date_str = file.readline()
             return datetime.strptime(last_fetched_date_str, '%Y-%m-%d').date()
     else:
-        return datetime.strptime('2022-01-01', '%Y-%m-%d').date()
+        return datetime.strptime('2023-01-24', '%Y-%m-%d').date()
 
 def update_last_fetched_date(date):
     with open('last_fetched_date.txt', 'w') as file:
@@ -47,9 +48,9 @@ def fetch_data_from_api(date):
 def insert_data_into_db(data, date):
     # Connect to the database
     db = mysql.connector.connect(
-        host="localhost",
+        host=LOCAL_MYSQL_HOST,
         user="root",
-        password="dongook9651",
+        password=LOCAL_MYSQL_PASSWORD,
         database="stock_data"
     )
     cursor = db.cursor()
@@ -77,7 +78,7 @@ if __name__ == "__main__":
         insert_data_into_db(data, date)
         
         # Adding a delay of 60 seconds between each API request to avoid rate limiting
-        time.sleep(60)
+        time.sleep(10)
         
         # Update the last fetched date
         update_last_fetched_date(date)
